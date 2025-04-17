@@ -45,5 +45,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: request_security_checker-linux-${{ matrix.arch }}
-        path: request_security_checker-linux-${{ matrix.arch }}
+        path: go_security_app/request_security_checker-linux-${{ matrix.arch }}
         retention-days: 7
