@@ -26,28 +26,57 @@ jobs:
   
   build:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        arch: ['amd64', 'arm64']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [amd64, arm64]
+        exclude:
+          - os: windows-latest
+            arch: arm64
+          - os: macos-latest
+            arch: amd64
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: '1.24'
     
-    - name: Build for ${{ matrix.arch }}
+    - name: Determine GOOS
+      id: goos
+      run: |
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          echo "value=linux" >> $GITHUB_OUTPUT
+        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+          echo "value=windows" >> $GITHUB_OUTPUT
+        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+          echo "value=darwin" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+    
+    - name: Determine file extension
+      id: ext
+      run: |
+        if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          echo "value=.exe" >> $GITHUB_OUTPUT
+        else
+          echo "value=" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+    
+    - name: Build
       working-directory: go_security_app
-      run: GOOS=linux GOARCH=${{ matrix.arch }} go build -o request_security_checker-linux-${{ matrix.arch }}
+      run: GOOS=${{ steps.goos.outputs.value }} GOARCH=${{ matrix.arch }} go build -o request_security_checker-${{ steps.goos.outputs.value }}-${{ matrix.arch }}${{ steps.ext.outputs.value }}
+      shell: bash
     
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
-        name: request_security_checker-linux-${{ matrix.arch }}
-        path: go_security_app/request_security_checker-linux-${{ matrix.arch }}
+        name: request_security_checker-${{ steps.goos.outputs.value }}-${{ matrix.arch }}
+        path: go_security_app/request_security_checker-${{ steps.goos.outputs.value }}-${{ matrix.arch }}${{ steps.ext.outputs.value }}
         retention-days: 7
 
   release:
@@ -80,3 +109,5 @@ jobs:
         files: |
           artifacts/request_security_checker-linux-amd64/request_security_checker-linux-amd64
           artifacts/request_security_checker-linux-arm64/request_security_checker-linux-arm64
+          artifacts/request_security_checker-windows-amd64/request_security_checker-windows-amd64.exe
+          artifacts/request_security_checker-darwin-arm64/request_security_checker-darwin-arm64
