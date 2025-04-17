@@ -76,6 +76,7 @@ jobs:
         name: Release ${{ github.ref_name }}
         draft: false
         prerelease: false
+        change-log: CHANGELOG.md
         files: |
           artifacts/request_security_checker-linux-amd64/request_security_checker-linux-amd64
           artifacts/request_security_checker-linux-arm64/request_security_checker-linux-arm64
