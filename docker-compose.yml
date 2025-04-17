@@ -9,4 +9,21 @@ services:
     restart: unless-stopped
     environment:
       - PORT=5001
+    depends_on:
+      redis:
+        condition: service_healthy
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["executable", "arg"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
  

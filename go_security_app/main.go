@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -8,8 +9,11 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 
+	"github.com/redis/go-redis/v9"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -35,6 +39,9 @@ var suspiciousDecodedQueryRegex = []*regexp.Regexp{
 	regexp.MustCompile(`(&&|\s*;\s*|\s*\|\s*|\s*` + "``" + `)`),
 }
 
+var redisClient *redis.Client
+var ctx = context.Background()
+
 func getEnv(key, defaultValue string) string {
 	value := os.Getenv(key)
 	if value == "" {
@@ -43,8 +50,68 @@ func getEnv(key, defaultValue string) string {
 	return value
 }
 
-func authCheckHandler(w http.ResponseWriter, r *http.Request) {
+var (
+	cooldownMinutes = 15
+)
 
+func initRedis() {
+	redisAddr := getEnv("REDIS_ADDR", "localhost:6379")
+	redisPassword := getEnv("REDIS_PASSWORD", "")
+	redisDB, _ := strconv.Atoi(getEnv("REDIS_DB", "0"))
+
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     redisAddr,
+		Password: redisPassword,
+		DB:       redisDB,
+	})
+
+	_, err := redisClient.Ping(ctx).Result()
+	if err != nil {
+		log.Printf("Warning: Redis connection failed: %v. Will continue without rate limiting.", err)
+	} else {
+		log.Printf("Redis connected successfully at %s", redisAddr)
+	}
+}
+
+func isClientBlocked(clientIP string) bool {
+	if redisClient == nil {
+		return false
+	}
+
+	blockedKey := fmt.Sprintf("blocked:%s", clientIP)
+	blockedUntil, err := redisClient.Get(ctx, blockedKey).Int64()
+	if err == redis.Nil {
+		return false
+	}
+	if err != nil {
+		log.Printf("Redis error checking blocked status: %v", err)
+		return false // On error, allow the request
+	}
+
+	return time.Now().Unix() < blockedUntil
+}
+
+func recordInvalidAttempt(clientIP string) {
+	if redisClient == nil {
+		return
+	}
+
+	now := time.Now()
+	blockedKey := fmt.Sprintf("blocked:%s", clientIP)
+
+	blockedUntil := now.Add(time.Duration(cooldownMinutes) * time.Minute).Unix()
+
+	err := redisClient.Set(ctx, blockedKey, blockedUntil, time.Duration(cooldownMinutes)*time.Minute).Err()
+	if err != nil {
+		log.Printf("Redis error setting blocked status: %v", err)
+		return
+	}
+
+	log.Printf("RateLimit: Blocking client %s until %v (cooldown: %d minutes)",
+		clientIP, time.Unix(blockedUntil, 0), cooldownMinutes)
+}
+
+func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 	originalURI := r.Header.Get("X-Original-URI")
 	originalMethod := r.Header.Get("X-Original-Method")
 	clientIP := r.Header.Get("X-Real-IP")
@@ -60,6 +127,12 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 	var parsedURI *url.URL
 	var err error
 
+	if isClientBlocked(clientIP) {
+		log.Printf("RateLimit: BLOCK - Client %s is in cooldown period", clientIP)
+		http.Error(w, "Too Many Invalid Requests", http.StatusForbidden)
+		return
+	}
+
 	if originalURI == "" {
 		parsedURI = r.URL
 		originalURI = r.URL.String()
@@ -71,7 +144,8 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 		parsedURI, err = url.ParseRequestURI(originalURI)
 		if err != nil {
 			log.Printf("AuthCheck: BLOCK - Failed to parse original URI '%s' from %s: %v", originalURI, clientIP, err)
-			http.Error(w, "Forbidden", http.StatusForbidden) // Block if URI is malformed
+			recordInvalidAttempt(clientIP)
+			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
 	}
@@ -82,28 +156,36 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("AuthCheck: Checking request for %s [%s] From: %s", originalURI, originalMethod, clientIP)
 
 	lowerPath := strings.ToLower(path)
-	for _, pattern := range blockedPathContains {
-		if strings.Contains(lowerPath, strings.ToLower(pattern)) {
-			sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked path containing: %s", pattern))
-			return
-		}
+	type pathCheck struct {
+		patterns []string
+		checkFn  func(path, pattern string) bool
+		isEqualFold bool
+		message  string
 	}
-	for _, suffix := range blockedPathSuffixes {
-		if strings.HasSuffix(lowerPath, strings.ToLower(suffix)) {
-			sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked path suffix: %s", suffix))
-			return
-		}
+
+	pathChecks := []pathCheck{
+		{blockedPathContains, strings.Contains, false, "Blocked path containing"},
+		{blockedPathSuffixes, strings.HasSuffix, false, "Blocked path suffix"},
+		{blockedPathPrefixes, strings.HasPrefix, false, "Blocked path prefix"},
+		{blockedExactPaths, strings.EqualFold, true, "Blocked exact path"},
 	}
-	for _, prefix := range blockedPathPrefixes {
-		if strings.HasPrefix(lowerPath, strings.ToLower(prefix)) {
-			sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked path prefix: %s", prefix))
-			return
-		}
-	}
-	for _, exactPath := range blockedExactPaths {
-		if strings.EqualFold(path, exactPath) {
-			sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked exact path: %s", exactPath))
-			return
+
+	for _, check := range pathChecks {
+		for _, pattern := range check.patterns {
+			patternLower := strings.ToLower(pattern)
+			var match bool
+			if check.isEqualFold {
+				match = check.checkFn(path, pattern)
+			} else {
+				match = check.checkFn(lowerPath, patternLower)
+			}
+			
+			if match {
+				recordInvalidAttempt(clientIP)
+				sendAuthBlockedResponse(w, clientIP, originalURI, 
+					fmt.Sprintf("%s: %s", check.message, pattern))
+				return
+			}
 		}
 	}
 
@@ -111,25 +193,26 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 		lowerRawQuery := strings.ToLower(rawQuery)
 		for _, pattern := range suspiciousRawQuerySubstrings {
 			if strings.Contains(lowerRawQuery, strings.ToLower(pattern)) {
+				recordInvalidAttempt(clientIP)
 				sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked suspicious raw query substring: %s", pattern))
 				return
 			}
 		}
+
 		decodedQuery, err := url.QueryUnescape(rawQuery)
 		if err == nil {
 			for _, re := range suspiciousDecodedQueryRegex {
 				if re.MatchString(decodedQuery) {
+					recordInvalidAttempt(clientIP)
 					sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked suspicious decoded query regex: %s", re.String()))
 					return
 				}
 			}
 		} else {
 			log.Printf("AuthCheck: Warning: Query decode failed for '%s' from %s: %v", rawQuery, clientIP, err)
-			// block based on decode failure
-			// sendAuthBlockedResponse(w, clientIP, originalURI, "Blocked due to invalid query encoding")
-			// return
 		}
 	}
+
 	log.Printf("AuthCheck: ALLOW request for %s From: %s", originalURI, clientIP)
 	w.WriteHeader(http.StatusOK)
 }
@@ -151,6 +234,15 @@ func main() {
 	multiWriter := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(multiWriter)
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
+
+	if val := getEnv("COOLDOWN_MINUTES", ""); val != "" {
+		if parsed, err := strconv.Atoi(val); err == nil && parsed > 0 {
+			cooldownMinutes = parsed
+		}
+	}
+
+	initRedis()
+
 	port := getEnv("PORT", "5000")
 	http.HandleFunc("/", authCheckHandler)
 	log.Printf("Starting Go security auth check server on port %s...", port)
