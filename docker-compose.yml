@@ -1,0 +1,12 @@
+
+services:
+  security_app:
+    build:
+      context: ./go_security_app
+      dockerfile: Dockerfile
+    command: '/app/security-app'
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - PORT=5001
+ 
