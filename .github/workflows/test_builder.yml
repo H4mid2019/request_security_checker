@@ -74,9 +74,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: Release ${{ github.ref_name }}
+        body_path: CHANGELOG.md
         draft: false
         prerelease: false
-        change-log: CHANGELOG.md
         files: |
           artifacts/request_security_checker-linux-amd64/request_security_checker-linux-amd64
           artifacts/request_security_checker-linux-arm64/request_security_checker-linux-arm64
