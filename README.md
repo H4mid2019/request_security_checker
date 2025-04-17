@@ -4,38 +4,30 @@
 
 ## Overview
 
-```markdown
-Request Security Checker is a high-performance security middleware designed to protect web applications 
-from malicious requests. Built in Go, it acts as a protective shield in front of your main application, 
+Request Security Checker is a high-performance security middleware designed to protect web applications
+from malicious requests. Built in Go, it acts as a protective shield in front of your main application,
 particularly beneficial for Python applications that may struggle with handling high request volumes.
-```
 
 ## Why Use This?
 
-```markdown
 - **Reduce Load on Main Application**: Filters out malicious requests before they reach your main app
 - **Protect Against Common Attacks**: Blocks SQL injection, XSS, path traversal, and other attack patterns
 - **Rate Limiting**: Automatically blocks IPs that send suspicious requests
 - **High Performance**: Written in Go for excellent throughput (handles thousands of requests per second)
 - **Easy Integration**: Works with Nginx and other reverse proxies
-```
 
 ## Features
 
-```markdown
 - **Path Security**: Blocks suspicious paths (PHP files, admin pages, etc.)
 - **Query Parameter Analysis**: Detects SQL injection and XSS attempts
 - **Rate Limiting**: Blocks repeat offenders with configurable cooldown periods
 - **Redis Integration**: Distributed rate limiting for multi-instance deployments
-```
 
 ## Requirements
 
-```markdown
 - Go 1.24+ (for building)
 - Docker 28.0+ and Docker Compose v2.35.0+ (for containerized deployment)
 - Redis (optional, for distributed rate limiting)
-```
 
 ## Quick Start
 
@@ -52,9 +44,7 @@ docker-compose up -d
 
 ### Using Pre-built Binaries
 
-```markdown
 Download the latest binary for your platform from the [Releases](https://github.com/H4mid2019/request_security_checker/releases) page.
-```
 
 ```bash
 # Download (replace with your architecture)
@@ -69,7 +59,6 @@ chmod +x request_security_checker-linux-amd64
 
 ## Configuration
 
-```markdown
 Configuration is done via environment variables:
 
 | Variable | Default | Description |
@@ -80,7 +69,6 @@ Configuration is done via environment variables:
 | `REDIS_DB` | `0` | Redis database |
 | `COOLDOWN_MINUTES` | `15` | Duration to block IPs after violation |
 | `LOG_FILE` | `blocker.log` | Log file location |
-```
 
 ## Integration with Nginx
 
@@ -122,12 +110,8 @@ go build -o request_security_checker
 
 ## License
 
-```markdown
 MIT License - See [LICENSE](LICENSE) for details.
-```
 
 ## Contributing
 
-```markdown
 Contributions are welcome! Please feel free to submit a Pull Request.
-```
