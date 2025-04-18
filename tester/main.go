@@ -105,7 +105,6 @@ func main() {
 	failed := 0
 
 	for _, tc := range testCases {
-		// Build properly encoded URL
 		reqURL, err := url.Parse(baseURL)
 		if err != nil {
 			fmt.Printf("Error parsing URL: %v\n", err)
@@ -123,7 +122,7 @@ func main() {
 		}
 
 		testURL := reqURL.String()
-		//fmt.Printf("Testing [%s]: %s\n", tc.description, testURL)
+		fmt.Printf("Testing [%s]: %s\n", tc.description, testURL)
 
 		resp, err := client.Get(testURL)
 		if err != nil {
@@ -132,10 +131,7 @@ func main() {
 		}
 
 		if resp.StatusCode == tc.expected {
-			if false {
-
-				fmt.Printf("✅ PASS: Got expected status %d\n", resp.StatusCode)
-			}
+			fmt.Printf("✅ PASS: Got expected status %d\n", resp.StatusCode)
 			passed++
 		} else {
 			fmt.Printf("Testing [%s]: %s\n", tc.description, testURL)
@@ -144,7 +140,7 @@ func main() {
 		}
 
 		resp.Body.Close()
-		//fmt.Println("----------------------------------------")
+		fmt.Println("----------------------------------------")
 	}
 
 	fmt.Printf("\nTest Summary: %d passed, %d failed\n", passed, failed)
