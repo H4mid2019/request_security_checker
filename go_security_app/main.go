@@ -31,16 +31,39 @@ var blockedPathContains = []string{
 }
 var suspiciousRawQuerySubstrings = []string{
 	"%24%7B", "%3Cscript", "%27%20OR%20", "UNION%20SELECT", "%2E%2E%2F", "../", "etc/passwd", "eval(", "base64_decode", "()",
+	"SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "UNION", "alert(", "onerror=", "onload=", "'OR", "OR'", "'AND", "AND'",
 }
+
+var commandInjectionPatterns = []string{
+    `\|\s*\w+`,
+    `echo\s+['"]?.*['"]?\s*\|`,
+    `[;&\|\`]\s*\w+`,
+    `\$\(\w+`,
+    `\`\w+`,
+}
+
 var suspiciousDecodedQueryRegex = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)`),
 	regexp.MustCompile(`(?i)(<script|onerror=|onload=|javascript:|alert\()`),
 	regexp.MustCompile(`\${`),
 	regexp.MustCompile(`(&&|\s*;\s*|\s*\|\s*|\s*` + "``" + `)`),
+
+	// SQL injection patterns (enhanced)
+	regexp.MustCompile(`(?i)(\s+(SELECT|UNION|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE)\s+|'.*?(OR|AND)\s*['"]?[01]['"]?\s*=\s*['"]?[01]|--|#|\/\*.*?\*\/)`),
+
+	// XSS patterns (enhanced)
+	regexp.MustCompile(`(?i)(<script|<img|onerror=|onload=|javascript:|alert\()`),
+
+	// Command injection patterns (added)
+	regexp.MustCompile(`(?i)(\$\{|\s*\|\s*|\s*;\s*|\s*&&\s*|\s*\|\|\s*|\s*` + "`" + `)`),
+
+	// SQL keywords in suspicious context
+	regexp.MustCompile(`(?i)(UNION\s+SELECT|DROP\s+TABLE|INSERT\s+INTO|UPDATE\s+.*?\s+SET)`),
 }
 
 var redisClient *redis.Client
 var ctx = context.Background()
+var rateLimitingDisabled bool
 
 func getEnv(key, defaultValue string) string {
 	value := os.Getenv(key)
@@ -55,6 +78,11 @@ var (
 )
 
 func initRedis() {
+	if rateLimitingDisabled {
+		log.Println("Rate limiting is disabled via DISABLE_RATE_LIMIT environment variable")
+		return
+	}
+
 	redisAddr := getEnv("REDIS_ADDR", "localhost:6379")
 	redisPassword := getEnv("REDIS_PASSWORD", "")
 	redisDB, _ := strconv.Atoi(getEnv("REDIS_DB", "0"))
@@ -74,7 +102,7 @@ func initRedis() {
 }
 
 func isClientBlocked(clientIP string) bool {
-	if redisClient == nil {
+	if rateLimitingDisabled || redisClient == nil {
 		return false
 	}
 
@@ -92,7 +120,7 @@ func isClientBlocked(clientIP string) bool {
 }
 
 func recordInvalidAttempt(clientIP string) {
-	if redisClient == nil {
+	if rateLimitingDisabled || redisClient == nil {
 		return
 	}
 
@@ -157,10 +185,10 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 
 	lowerPath := strings.ToLower(path)
 	type pathCheck struct {
-		patterns []string
-		checkFn  func(path, pattern string) bool
+		patterns    []string
+		checkFn     func(path, pattern string) bool
 		isEqualFold bool
-		message  string
+		message     string
 	}
 
 	pathChecks := []pathCheck{
@@ -179,10 +207,10 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				match = check.checkFn(lowerPath, patternLower)
 			}
-			
+
 			if match {
 				recordInvalidAttempt(clientIP)
-				sendAuthBlockedResponse(w, clientIP, originalURI, 
+				sendAuthBlockedResponse(w, clientIP, originalURI,
 					fmt.Sprintf("%s: %s", check.message, pattern))
 				return
 			}
@@ -240,6 +268,10 @@ func main() {
 			cooldownMinutes = parsed
 		}
 	}
+
+	// Check if rate limiting should be disabled
+	disableRateLimit := getEnv("DISABLE_RATE_LIMIT", "")
+	rateLimitingDisabled = disableRateLimit != ""
 
 	initRedis()
 

@@ -1,0 +1,388 @@
+2025/04/18 10:04:50.757869 Rate limiting is disabled via DISABLE_RATE_LIMIT environment variable
+2025/04/18 10:04:50.758028 Starting Go security auth check server on port 5000...
+2025/04/18 10:05:11.739344 AuthCheck: Checking request for /remote/access [GET] From: [::1]:38706
+2025/04/18 10:05:11.739392 AuthCheck: BLOCK request for /remote/access [Blocked path containing: remote/] From: [::1]:38706
+2025/04/18 10:05:11.740097 AuthCheck: Checking request for /manager/login [GET] From: [::1]:38708
+2025/04/18 10:05:11.740170 AuthCheck: BLOCK request for /manager/login [Blocked path containing: manager/] From: [::1]:38708
+2025/04/18 10:05:11.740710 AuthCheck: Checking request for /repository/.git/config [GET] From: [::1]:38712
+2025/04/18 10:05:11.740748 AuthCheck: BLOCK request for /repository/.git/config [Blocked path containing: .git/] From: [::1]:38712
+2025/04/18 10:05:11.741214 AuthCheck: Checking request for / [GET] From: [::1]:38724
+2025/04/18 10:05:11.741265 AuthCheck: ALLOW request for / From: [::1]:38724
+2025/04/18 10:05:11.742125 AuthCheck: Checking request for /plugins/wp-admin/edit.php [GET] From: [::1]:38748
+2025/04/18 10:05:11.742155 AuthCheck: BLOCK request for /plugins/wp-admin/edit.php [Blocked path containing: wp-admin/] From: [::1]:38748
+2025/04/18 10:05:11.742548 AuthCheck: Checking request for /?query=base64_decode('PHN5c3RlbT4=') [GET] From: [::1]:38760
+2025/04/18 10:05:11.742678 AuthCheck: BLOCK request for /?query=base64_decode('PHN5c3RlbT4=') [Blocked suspicious raw query substring: base64_decode] From: [::1]:38760
+2025/04/18 10:05:11.743514 AuthCheck: Checking request for /?query=<script>document.cookie [GET] From: [::1]:38772
+2025/04/18 10:05:11.743662 AuthCheck: BLOCK request for /?query=<script>document.cookie [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:38772
+2025/04/18 10:05:11.745934 AuthCheck: Checking request for /.htaccess [GET] From: [::1]:38788
+2025/04/18 10:05:11.746006 AuthCheck: BLOCK request for /.htaccess [Blocked path suffix: .htaccess] From: [::1]:38788
+2025/04/18 10:05:11.746538 AuthCheck: Checking request for /wp-includes/script.js [GET] From: [::1]:38796
+2025/04/18 10:05:11.746570 AuthCheck: BLOCK request for /wp-includes/script.js [Blocked path containing: wp-includes/] From: [::1]:38796
+2025/04/18 10:05:11.746972 AuthCheck: Checking request for /configuration.php [GET] From: [::1]:38804
+2025/04/18 10:05:11.747028 AuthCheck: BLOCK request for /configuration.php [Blocked path containing: configuration.php] From: [::1]:38804
+2025/04/18 10:05:11.747439 AuthCheck: Checking request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [GET] From: [::1]:38806
+2025/04/18 10:05:11.747531 AuthCheck: BLOCK request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [Blocked suspicious raw query substring: eval(] From: [::1]:38806
+2025/04/18 10:05:11.749136 AuthCheck: Checking request for /themes/wp-includes/style.css [GET] From: [::1]:38808
+2025/04/18 10:05:11.749419 AuthCheck: BLOCK request for /themes/wp-includes/style.css [Blocked path containing: wp-includes/] From: [::1]:38808
+2025/04/18 10:05:11.750146 AuthCheck: Checking request for /api/remote/data [GET] From: [::1]:38810
+2025/04/18 10:05:11.750237 AuthCheck: BLOCK request for /api/remote/data [Blocked path containing: remote/] From: [::1]:38810
+2025/04/18 10:05:11.752933 AuthCheck: Checking request for /?query=%24%7B%7Bsystem%7D%7D [GET] From: [::1]:38824
+2025/04/18 10:05:11.752972 AuthCheck: BLOCK request for /?query=%24%7B%7Bsystem%7D%7D [Blocked suspicious raw query substring: %24%7B] From: [::1]:38824
+2025/04/18 10:05:11.754116 AuthCheck: Checking request for /app/config.json [GET] From: [::1]:38842
+2025/04/18 10:05:11.754184 AuthCheck: BLOCK request for /app/config.json [Blocked path containing: config.json] From: [::1]:38842
+2025/04/18 10:05:11.755490 AuthCheck: Checking request for /?query=cat%20/etc/passwd [GET] From: [::1]:38852
+2025/04/18 10:05:11.755597 AuthCheck: BLOCK request for /?query=cat%20/etc/passwd [Blocked suspicious raw query substring: etc/passwd] From: [::1]:38852
+2025/04/18 10:05:11.756237 AuthCheck: Checking request for /?query=javascript:alert(1) [GET] From: [::1]:38868
+2025/04/18 10:05:11.756339 AuthCheck: BLOCK request for /?query=javascript:alert(1) [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:38868
+2025/04/18 10:05:11.757002 AuthCheck: Checking request for /config.aspx [GET] From: [::1]:38884
+2025/04/18 10:05:11.757577 AuthCheck: BLOCK request for /config.aspx [Blocked path suffix: .aspx] From: [::1]:38884
+2025/04/18 10:05:11.759580 AuthCheck: Checking request for /.htpasswd [GET] From: [::1]:38898
+2025/04/18 10:05:11.759644 AuthCheck: BLOCK request for /.htpasswd [Blocked path suffix: .htpasswd] From: [::1]:38898
+2025/04/18 10:05:11.760067 AuthCheck: Checking request for /system/configuration.php [GET] From: [::1]:38904
+2025/04/18 10:05:11.760171 AuthCheck: BLOCK request for /system/configuration.php [Blocked path containing: configuration.php] From: [::1]:38904
+2025/04/18 10:05:11.760658 AuthCheck: Checking request for /?query=../../../etc/passwd [GET] From: [::1]:38908
+2025/04/18 10:05:11.760715 AuthCheck: BLOCK request for /?query=../../../etc/passwd [Blocked suspicious raw query substring: ../] From: [::1]:38908
+2025/04/18 10:05:11.764427 AuthCheck: Checking request for /?query=<script>alert('XSS')</script> [GET] From: [::1]:38948
+2025/04/18 10:05:11.764511 AuthCheck: BLOCK request for /?query=<script>alert('XSS')</script> [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:38948
+2025/04/18 10:05:11.765363 AuthCheck: Checking request for /console/admin/settings [GET] From: [::1]:38960
+2025/04/18 10:05:11.765438 AuthCheck: BLOCK request for /console/admin/settings [Blocked path containing: admin/] From: [::1]:38960
+2025/04/18 10:05:11.765906 AuthCheck: Checking request for /index.html [GET] From: [::1]:38962
+2025/04/18 10:05:11.765958 AuthCheck: ALLOW request for /index.html From: [::1]:38962
+2025/04/18 10:05:11.766175 AuthCheck: Checking request for /malicious.php [GET] From: [::1]:38962
+2025/04/18 10:05:11.766214 AuthCheck: BLOCK request for /malicious.php [Blocked path suffix: .php] From: [::1]:38962
+2025/04/18 10:05:11.767015 AuthCheck: Checking request for /?query=%27%20OR%201=1 [GET] From: [::1]:38978
+2025/04/18 10:05:11.767152 AuthCheck: BLOCK request for /?query=%27%20OR%201=1 [Blocked suspicious raw query substring: %27%20OR%20] From: [::1]:38978
+2025/04/18 10:05:11.767601 AuthCheck: Checking request for /?query=test${execute} [GET] From: [::1]:38992
+2025/04/18 10:05:11.767669 AuthCheck: BLOCK request for /?query=test${execute} [Blocked suspicious decoded query regex: \${] From: [::1]:38992
+2025/04/18 10:05:11.768139 AuthCheck: Checking request for /?query=normal_parameter [GET] From: [::1]:38998
+2025/04/18 10:05:11.768300 AuthCheck: ALLOW request for /?query=normal_parameter From: [::1]:38998
+2025/04/18 10:05:11.769444 AuthCheck: Checking request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [GET] From: [::1]:38998
+2025/04/18 10:05:11.769537 AuthCheck: BLOCK request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [Blocked suspicious raw query substring: %3Cscript] From: [::1]:38998
+2025/04/18 10:05:11.770419 AuthCheck: Checking request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [GET] From: [::1]:39014
+2025/04/18 10:05:11.770476 AuthCheck: BLOCK request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [Blocked suspicious raw query substring: %2E%2E%2F] From: [::1]:39014
+2025/04/18 10:05:11.773727 AuthCheck: Checking request for /?query=user'--comment [GET] From: [::1]:39052
+2025/04/18 10:05:11.773783 AuthCheck: BLOCK request for /?query=user'--comment [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:39052
+2025/04/18 10:05:11.775302 AuthCheck: Checking request for /repo/.git/ [GET] From: [::1]:39054
+2025/04/18 10:05:11.775546 AuthCheck: BLOCK request for /repo/.git/ [Blocked path containing: .git/] From: [::1]:39054
+2025/04/18 10:05:11.776711 AuthCheck: Checking request for /images/logo.png [GET] From: [::1]:39078
+2025/04/18 10:05:11.776794 AuthCheck: ALLOW request for /images/logo.png From: [::1]:39078
+2025/04/18 10:05:11.777376 AuthCheck: Checking request for /.env [GET] From: [::1]:39090
+2025/04/18 10:05:11.777444 AuthCheck: BLOCK request for /.env [Blocked path suffix: .env] From: [::1]:39090
+2025/04/18 10:05:11.778384 AuthCheck: Checking request for /xmlrpc.php [GET] From: [::1]:39104
+2025/04/18 10:05:11.778456 AuthCheck: BLOCK request for /xmlrpc.php [Blocked path suffix: .php] From: [::1]:39104
+2025/04/18 10:05:11.780021 AuthCheck: Checking request for /index.jsp [GET] From: [::1]:39136
+2025/04/18 10:05:11.780129 AuthCheck: BLOCK request for /index.jsp [Blocked path suffix: .jsp] From: [::1]:39136
+2025/04/18 10:05:11.782310 AuthCheck: Checking request for /?query=user' [GET] From: [::1]:39146
+2025/04/18 10:05:11.782418 AuthCheck: ALLOW request for /?query=user' From: [::1]:39146
+2025/04/18 10:05:11.783235 AuthCheck: Checking request for /wp-admin/index.php [GET] From: [::1]:39162
+2025/04/18 10:05:11.783315 AuthCheck: BLOCK request for /wp-admin/index.php [Blocked path containing: wp-admin/] From: [::1]:39162
+2025/04/18 10:05:11.783882 AuthCheck: Checking request for /admin/dashboard [GET] From: [::1]:39164
+2025/04/18 10:05:11.783947 AuthCheck: BLOCK request for /admin/dashboard [Blocked path containing: admin/] From: [::1]:39164
+2025/04/18 10:05:11.784572 AuthCheck: Checking request for /config.json [GET] From: [::1]:39176
+2025/04/18 10:05:11.784725 AuthCheck: BLOCK request for /config.json [Blocked path containing: config.json] From: [::1]:39176
+2025/04/18 10:05:11.786637 AuthCheck: Checking request for /?query=phpinfo() [GET] From: [::1]:39178
+2025/04/18 10:05:11.786687 AuthCheck: BLOCK request for /?query=phpinfo() [Blocked suspicious raw query substring: ()] From: [::1]:39178
+2025/04/18 10:05:11.787567 AuthCheck: Checking request for /api/data [GET] From: [::1]:39204
+2025/04/18 10:05:11.787625 AuthCheck: ALLOW request for /api/data From: [::1]:39204
+2025/04/18 10:05:11.787844 AuthCheck: Checking request for /dashboard/manager/users [GET] From: [::1]:39204
+2025/04/18 10:05:11.787869 AuthCheck: BLOCK request for /dashboard/manager/users [Blocked path containing: manager/] From: [::1]:39204
+2025/04/18 10:05:11.788362 AuthCheck: Checking request for /?query=UNION%20SELECT%20password%20FROM%20users [GET] From: [::1]:39214
+2025/04/18 10:05:11.788421 AuthCheck: BLOCK request for /?query=UNION%20SELECT%20password%20FROM%20users [Blocked suspicious raw query substring: UNION%20SELECT] From: [::1]:39214
+2025/04/18 10:17:57.336605 AuthCheck: Checking request for /?query=eval%28base64_decode%28%27PHN5c3RlbT4%3D%27%29%29 [GET] From: [::1]:60980
+2025/04/18 10:17:57.336712 AuthCheck: BLOCK request for /?query=eval%28base64_decode%28%27PHN5c3RlbT4%3D%27%29%29 [Blocked suspicious raw query substring: base64_decode] From: [::1]:60980
+2025/04/18 10:17:57.337222 AuthCheck: Checking request for /?query=user%27+AND+%271%27%3D%271 [GET] From: [::1]:60996
+2025/04/18 10:17:57.337293 AuthCheck: BLOCK request for /?query=user%27+AND+%271%27%3D%271 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:60996
+2025/04/18 10:17:57.337928 AuthCheck: Checking request for /?query=test%24%7Bexecute%7D [GET] From: [::1]:60998
+2025/04/18 10:17:57.337962 AuthCheck: BLOCK request for /?query=test%24%7Bexecute%7D [Blocked suspicious raw query substring: %24%7B] From: [::1]:60998
+2025/04/18 10:17:57.338365 AuthCheck: Checking request for /?query=echo+%60whoami%60 [GET] From: [::1]:32778
+2025/04/18 10:17:57.338447 AuthCheck: ALLOW request for /?query=echo+%60whoami%60 From: [::1]:32778
+2025/04/18 10:17:57.338781 AuthCheck: Checking request for /.env [GET] From: [::1]:32778
+2025/04/18 10:17:57.338833 AuthCheck: BLOCK request for /.env [Blocked path suffix: .env] From: [::1]:32778
+2025/04/18 10:17:57.339558 AuthCheck: Checking request for /dashboard/manager/users [GET] From: [::1]:32784
+2025/04/18 10:17:57.339608 AuthCheck: BLOCK request for /dashboard/manager/users [Blocked path containing: manager/] From: [::1]:32784
+2025/04/18 10:17:57.339947 AuthCheck: Checking request for /remote/access [GET] From: [::1]:32790
+2025/04/18 10:17:57.339984 AuthCheck: BLOCK request for /remote/access [Blocked path containing: remote/] From: [::1]:32790
+2025/04/18 10:17:57.340338 AuthCheck: Checking request for /app/config.json [GET] From: [::1]:32792
+2025/04/18 10:17:57.340399 AuthCheck: BLOCK request for /app/config.json [Blocked path containing: config.json] From: [::1]:32792
+2025/04/18 10:17:57.340849 AuthCheck: Checking request for /?+ls=&query=cat+%2Fetc%2Fpasswd+ [GET] From: [::1]:32800
+2025/04/18 10:17:57.340971 AuthCheck: ALLOW request for /?+ls=&query=cat+%2Fetc%2Fpasswd+ From: [::1]:32800
+2025/04/18 10:17:57.341209 AuthCheck: Checking request for /?query=echo+%27evil%27+%7C+grep+e [GET] From: [::1]:32800
+2025/04/18 10:17:57.341378 AuthCheck: BLOCK request for /?query=echo+%27evil%27+%7C+grep+e [Blocked suspicious decoded query regex: (&&|\s*;\s*|\s*\|\s*|\s*``)] From: [::1]:32800
+2025/04/18 10:17:57.341879 AuthCheck: Checking request for /?query=SELECT+%2A+FROM+users+WHERE+username%3D%27admin%27+AND+password%3D%27password%27 [GET] From: [::1]:32802
+2025/04/18 10:17:57.341979 AuthCheck: ALLOW request for /?query=SELECT+%2A+FROM+users+WHERE+username%3D%27admin%27+AND+password%3D%27password%27 From: [::1]:32802
+2025/04/18 10:17:57.342256 AuthCheck: Checking request for /config.json [GET] From: [::1]:32802
+2025/04/18 10:17:57.342289 AuthCheck: BLOCK request for /config.json [Blocked path containing: config.json] From: [::1]:32802
+2025/04/18 10:17:57.342845 AuthCheck: Checking request for /configuration.php [GET] From: [::1]:32814
+2025/04/18 10:17:57.342950 AuthCheck: BLOCK request for /configuration.php [Blocked path containing: configuration.php] From: [::1]:32814
+2025/04/18 10:17:57.343638 AuthCheck: Checking request for /api/remote/data [GET] From: [::1]:32828
+2025/04/18 10:17:57.343678 AuthCheck: BLOCK request for /api/remote/data [Blocked path containing: remote/] From: [::1]:32828
+2025/04/18 10:17:57.344230 AuthCheck: Checking request for /?query=%24%7B%7Bsystem%7D%7D [GET] From: [::1]:32836
+2025/04/18 10:17:57.344264 AuthCheck: BLOCK request for /?query=%24%7B%7Bsystem%7D%7D [Blocked suspicious raw query substring: %24%7B] From: [::1]:32836
+2025/04/18 10:17:57.344618 AuthCheck: Checking request for /?query=base64_decode%28%27PHN5c3RlbT4%3D%27%29 [GET] From: [::1]:32844
+2025/04/18 10:17:57.344645 AuthCheck: BLOCK request for /?query=base64_decode%28%27PHN5c3RlbT4%3D%27%29 [Blocked suspicious raw query substring: base64_decode] From: [::1]:32844
+2025/04/18 10:17:57.345121 AuthCheck: Checking request for /?query=user%27+SELECT+%2A+FROM+users [GET] From: [::1]:32852
+2025/04/18 10:17:57.345170 AuthCheck: BLOCK request for /?query=user%27+SELECT+%2A+FROM+users [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32852
+2025/04/18 10:17:57.345623 AuthCheck: Checking request for /?query=1+OR+1%3D1 [GET] From: [::1]:32854
+2025/04/18 10:17:57.345658 AuthCheck: BLOCK request for /?query=1+OR+1%3D1 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32854
+2025/04/18 10:17:57.346034 AuthCheck: Checking request for /config.aspx [GET] From: [::1]:32860
+2025/04/18 10:17:57.346124 AuthCheck: BLOCK request for /config.aspx [Blocked path suffix: .aspx] From: [::1]:32860
+2025/04/18 10:17:57.346770 AuthCheck: Checking request for /wp-includes/script.js [GET] From: [::1]:32876
+2025/04/18 10:17:57.346831 AuthCheck: BLOCK request for /wp-includes/script.js [Blocked path containing: wp-includes/] From: [::1]:32876
+2025/04/18 10:17:57.347243 AuthCheck: Checking request for /xmlrpc.php [GET] From: [::1]:32880
+2025/04/18 10:17:57.347352 AuthCheck: BLOCK request for /xmlrpc.php [Blocked path suffix: .php] From: [::1]:32880
+2025/04/18 10:17:57.347989 AuthCheck: Checking request for /?query=..%2F..%2F..%2Fetc%2Fpasswd [GET] From: [::1]:32896
+2025/04/18 10:17:57.348119 AuthCheck: ALLOW request for /?query=..%2F..%2F..%2Fetc%2Fpasswd From: [::1]:32896
+2025/04/18 10:17:57.348444 AuthCheck: Checking request for /?query=user%27+INSERT+INTO+users+VALUES+%281%2C%27hack%27%29 [GET] From: [::1]:32896
+2025/04/18 10:17:57.348802 AuthCheck: BLOCK request for /?query=user%27+INSERT+INTO+users+VALUES+%281%2C%27hack%27%29 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32896
+2025/04/18 10:17:57.349647 AuthCheck: Checking request for /?query=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E [GET] From: [::1]:32900
+2025/04/18 10:17:57.349699 AuthCheck: BLOCK request for /?query=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E [Blocked suspicious raw query substring: %3Cscript] From: [::1]:32900
+2025/04/18 10:17:57.350274 AuthCheck: Checking request for /?query=%27+OR+1%3D1 [GET] From: [::1]:32906
+2025/04/18 10:17:57.350387 AuthCheck: BLOCK request for /?query=%27+OR+1%3D1 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32906
+2025/04/18 10:17:57.351143 AuthCheck: Checking request for /?query=user%27+DELETE+FROM+users [GET] From: [::1]:32908
+2025/04/18 10:17:57.351212 AuthCheck: BLOCK request for /?query=user%27+DELETE+FROM+users [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32908
+2025/04/18 10:17:57.351757 AuthCheck: Checking request for /?query=%3Cdiv+onload%3Dalert%281%29%3E [GET] From: [::1]:32910
+2025/04/18 10:17:57.351813 AuthCheck: BLOCK request for /?query=%3Cdiv+onload%3Dalert%281%29%3E [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:32910
+2025/04/18 10:17:57.352500 AuthCheck: Checking request for /index.jsp [GET] From: [::1]:32914
+2025/04/18 10:17:57.352549 AuthCheck: BLOCK request for /index.jsp [Blocked path suffix: .jsp] From: [::1]:32914
+2025/04/18 10:17:57.353074 AuthCheck: Checking request for /system/configuration.php [GET] From: [::1]:32922
+2025/04/18 10:17:57.353111 AuthCheck: BLOCK request for /system/configuration.php [Blocked path containing: configuration.php] From: [::1]:32922
+2025/04/18 10:17:57.353820 AuthCheck: Checking request for /?query=phpinfo%28%29 [GET] From: [::1]:32928
+2025/04/18 10:17:57.353882 AuthCheck: ALLOW request for /?query=phpinfo%28%29 From: [::1]:32928
+2025/04/18 10:17:57.354029 AuthCheck: Checking request for /?query=user%27%23comment [GET] From: [::1]:32928
+2025/04/18 10:17:57.354084 AuthCheck: BLOCK request for /?query=user%27%23comment [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32928
+2025/04/18 10:17:57.354680 AuthCheck: Checking request for /?query=normal_parameter [GET] From: [::1]:32938
+2025/04/18 10:17:57.354760 AuthCheck: ALLOW request for /?query=normal_parameter From: [::1]:32938
+2025/04/18 10:17:57.354914 AuthCheck: Checking request for /?query=..%2F..%2F..%2Fetc%2Fpasswd [GET] From: [::1]:32938
+2025/04/18 10:17:57.354958 AuthCheck: ALLOW request for /?query=..%2F..%2F..%2Fetc%2Fpasswd From: [::1]:32938
+2025/04/18 10:17:57.355159 AuthCheck: Checking request for /index.html [GET] From: [::1]:32938
+2025/04/18 10:17:57.355210 AuthCheck: ALLOW request for /index.html From: [::1]:32938
+2025/04/18 10:17:57.355382 AuthCheck: Checking request for /.htpasswd [GET] From: [::1]:32938
+2025/04/18 10:17:57.355425 AuthCheck: BLOCK request for /.htpasswd [Blocked path suffix: .htpasswd] From: [::1]:32938
+2025/04/18 10:17:57.355858 AuthCheck: Checking request for /themes/wp-includes/style.css [GET] From: [::1]:32944
+2025/04/18 10:17:57.355902 AuthCheck: BLOCK request for /themes/wp-includes/style.css [Blocked path containing: wp-includes/] From: [::1]:32944
+2025/04/18 10:17:57.356383 AuthCheck: Checking request for /plugins/wp-admin/edit.php [GET] From: [::1]:32952
+2025/04/18 10:17:57.356428 AuthCheck: BLOCK request for /plugins/wp-admin/edit.php [Blocked path containing: wp-admin/] From: [::1]:32952
+2025/04/18 10:17:57.356909 AuthCheck: Checking request for /?query=user%27+%2F%2A+SQL+injection+%2A%2F [GET] From: [::1]:32956
+2025/04/18 10:17:57.356977 AuthCheck: BLOCK request for /?query=user%27+%2F%2A+SQL+injection+%2A%2F [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32956
+2025/04/18 10:17:57.357393 AuthCheck: Checking request for /?query=javascript%3Aalert%281%29 [GET] From: [::1]:32960
+2025/04/18 10:17:57.357504 AuthCheck: BLOCK request for /?query=javascript%3Aalert%281%29 [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:32960
+2025/04/18 10:17:57.357999 AuthCheck: Checking request for /malicious.php [GET] From: [::1]:32972
+2025/04/18 10:17:57.358370 AuthCheck: BLOCK request for /malicious.php [Blocked path suffix: .php] From: [::1]:32972
+2025/04/18 10:17:57.358915 AuthCheck: Checking request for /admin/dashboard [GET] From: [::1]:32980
+2025/04/18 10:17:57.358945 AuthCheck: BLOCK request for /admin/dashboard [Blocked path containing: admin/] From: [::1]:32980
+2025/04/18 10:17:57.359504 AuthCheck: Checking request for /?query=UNION+SELECT+password+FROM+users [GET] From: [::1]:32988
+2025/04/18 10:17:57.359542 AuthCheck: BLOCK request for /?query=UNION+SELECT+password+FROM+users [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32988
+2025/04/18 10:17:57.360353 AuthCheck: Checking request for /?query=user%27+UPDATE+users+SET+admin%3D1 [GET] From: [::1]:32992
+2025/04/18 10:17:57.360414 AuthCheck: BLOCK request for /?query=user%27+UPDATE+users+SET+admin%3D1 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:32992
+2025/04/18 10:17:57.361197 AuthCheck: Checking request for /?query=user%27+OR+%271%27%3D%271 [GET] From: [::1]:33004
+2025/04/18 10:17:57.361239 AuthCheck: BLOCK request for /?query=user%27+OR+%271%27%3D%271 [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:33004
+2025/04/18 10:17:57.361673 AuthCheck: Checking request for /wp-admin/index.php [GET] From: [::1]:33006
+2025/04/18 10:17:57.361718 AuthCheck: BLOCK request for /wp-admin/index.php [Blocked path containing: wp-admin/] From: [::1]:33006
+2025/04/18 10:17:57.362197 AuthCheck: Checking request for /manager/login [GET] From: [::1]:33014
+2025/04/18 10:17:57.362267 AuthCheck: BLOCK request for /manager/login [Blocked path containing: manager/] From: [::1]:33014
+2025/04/18 10:17:57.362908 AuthCheck: Checking request for /repository/.git/config [GET] From: [::1]:33018
+2025/04/18 10:17:57.362941 AuthCheck: BLOCK request for /repository/.git/config [Blocked path containing: .git/] From: [::1]:33018
+2025/04/18 10:17:57.363674 AuthCheck: Checking request for /console/admin/settings [GET] From: [::1]:33020
+2025/04/18 10:17:57.363713 AuthCheck: BLOCK request for /console/admin/settings [Blocked path containing: admin/] From: [::1]:33020
+2025/04/18 10:17:57.364195 AuthCheck: Checking request for /?query=user%27--comment [GET] From: [::1]:33032
+2025/04/18 10:17:57.364270 AuthCheck: BLOCK request for /?query=user%27--comment [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:33032
+2025/04/18 10:17:57.364666 AuthCheck: Checking request for /images/logo.png [GET] From: [::1]:33036
+2025/04/18 10:17:57.364797 AuthCheck: ALLOW request for /images/logo.png From: [::1]:33036
+2025/04/18 10:17:57.365091 AuthCheck: Checking request for /?query=DROP+TABLE+users [GET] From: [::1]:33036
+2025/04/18 10:17:57.365144 AuthCheck: ALLOW request for /?query=DROP+TABLE+users From: [::1]:33036
+2025/04/18 10:17:57.365406 AuthCheck: Checking request for /.htaccess [GET] From: [::1]:33036
+2025/04/18 10:17:57.365448 AuthCheck: BLOCK request for /.htaccess [Blocked path suffix: .htaccess] From: [::1]:33036
+2025/04/18 10:17:57.365840 AuthCheck: Checking request for /repo/.git/ [GET] From: [::1]:33048
+2025/04/18 10:17:57.365883 AuthCheck: BLOCK request for /repo/.git/ [Blocked path containing: .git/] From: [::1]:33048
+2025/04/18 10:17:57.366356 AuthCheck: Checking request for /?query=cat+%2Fetc%2Fpasswd [GET] From: [::1]:33054
+2025/04/18 10:17:57.366399 AuthCheck: ALLOW request for /?query=cat+%2Fetc%2Fpasswd From: [::1]:33054
+2025/04/18 10:17:57.366699 AuthCheck: Checking request for /?query=user%27+UNION+SELECT+password+FROM+users [GET] From: [::1]:33054
+2025/04/18 10:17:57.366754 AuthCheck: BLOCK request for /?query=user%27+UNION+SELECT+password+FROM+users [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:33054
+2025/04/18 10:17:57.367095 AuthCheck: Checking request for / [GET] From: [::1]:33062
+2025/04/18 10:17:57.367143 AuthCheck: ALLOW request for / From: [::1]:33062
+2025/04/18 10:17:57.367394 AuthCheck: Checking request for /api/data [GET] From: [::1]:33062
+2025/04/18 10:17:57.367440 AuthCheck: ALLOW request for /api/data From: [::1]:33062
+2025/04/18 10:17:57.367706 AuthCheck: Checking request for /?query=UNION+SELECT+username%2C+password+FROM+users [GET] From: [::1]:33062
+2025/04/18 10:17:57.368235 AuthCheck: BLOCK request for /?query=UNION+SELECT+username%2C+password+FROM+users [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:33062
+2025/04/18 10:17:57.369235 AuthCheck: Checking request for /?query=%3Cscript%3Edocument.cookie [GET] From: [::1]:33074
+2025/04/18 10:17:57.369270 AuthCheck: BLOCK request for /?query=%3Cscript%3Edocument.cookie [Blocked suspicious raw query substring: %3Cscript] From: [::1]:33074
+2025/04/18 10:17:57.370342 AuthCheck: Checking request for /?query=%3Cimg+onerror%3Dalert%281%29%3E [GET] From: [::1]:33080
+2025/04/18 10:17:57.370387 AuthCheck: BLOCK request for /?query=%3Cimg+onerror%3Dalert%281%29%3E [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:33080
+2025/04/18 10:17:57.370857 AuthCheck: Checking request for /?query=%3Cscript%3Ealert%281%29%3C%2Fscript%3E [GET] From: [::1]:33088
+2025/04/18 10:17:57.370892 AuthCheck: BLOCK request for /?query=%3Cscript%3Ealert%281%29%3C%2Fscript%3E [Blocked suspicious raw query substring: %3Cscript] From: [::1]:33088
+2025/04/18 10:23:56.258134 AuthCheck: Checking request for /.htaccess [GET] From: [::1]:44930
+2025/04/18 10:23:56.258226 AuthCheck: BLOCK request for /.htaccess [Blocked path suffix: .htaccess] From: [::1]:44930
+2025/04/18 10:23:56.258665 AuthCheck: Checking request for /admin/dashboard [GET] From: [::1]:44942
+2025/04/18 10:23:56.259015 AuthCheck: BLOCK request for /admin/dashboard [Blocked path containing: admin/] From: [::1]:44942
+2025/04/18 10:23:56.259538 AuthCheck: Checking request for /plugins/wp-admin/edit.php [GET] From: [::1]:44950
+2025/04/18 10:23:56.259663 AuthCheck: BLOCK request for /plugins/wp-admin/edit.php [Blocked path containing: wp-admin/] From: [::1]:44950
+2025/04/18 10:23:56.260210 AuthCheck: Checking request for /api/remote/data [GET] From: [::1]:44964
+2025/04/18 10:23:56.260255 AuthCheck: BLOCK request for /api/remote/data [Blocked path containing: remote/] From: [::1]:44964
+2025/04/18 10:23:56.260739 AuthCheck: Checking request for /images/logo.png [GET] From: [::1]:44980
+2025/04/18 10:23:56.260799 AuthCheck: ALLOW request for /images/logo.png From: [::1]:44980
+2025/04/18 10:23:56.261420 AuthCheck: Checking request for /system/configuration.php [GET] From: [::1]:44994
+2025/04/18 10:23:56.261468 AuthCheck: BLOCK request for /system/configuration.php [Blocked path containing: configuration.php] From: [::1]:44994
+2025/04/18 10:23:56.262009 AuthCheck: Checking request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [GET] From: [::1]:45010
+2025/04/18 10:23:56.262043 AuthCheck: BLOCK request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [Blocked suspicious raw query substring: %2E%2E%2F] From: [::1]:45010
+2025/04/18 10:23:56.262497 AuthCheck: Checking request for /?query=javascript:alert(1) [GET] From: [::1]:45024
+2025/04/18 10:23:56.262599 AuthCheck: BLOCK request for /?query=javascript:alert(1) [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:45024
+2025/04/18 10:23:56.265089 AuthCheck: Checking request for /.htpasswd [GET] From: [::1]:45072
+2025/04/18 10:23:56.265157 AuthCheck: BLOCK request for /.htpasswd [Blocked path suffix: .htpasswd] From: [::1]:45072
+2025/04/18 10:23:56.265798 AuthCheck: Checking request for /manager/login [GET] From: [::1]:45080
+2025/04/18 10:23:56.265846 AuthCheck: BLOCK request for /manager/login [Blocked path containing: manager/] From: [::1]:45080
+2025/04/18 10:23:56.266726 AuthCheck: Checking request for /?query=user' [GET] From: [::1]:45094
+2025/04/18 10:23:56.266791 AuthCheck: ALLOW request for /?query=user' From: [::1]:45094
+2025/04/18 10:23:56.267002 AuthCheck: Checking request for /dashboard/manager/users [GET] From: [::1]:45094
+2025/04/18 10:23:56.267040 AuthCheck: BLOCK request for /dashboard/manager/users [Blocked path containing: manager/] From: [::1]:45094
+2025/04/18 10:23:56.268246 AuthCheck: Checking request for /?query=user'--comment [GET] From: [::1]:45110
+2025/04/18 10:23:56.268325 AuthCheck: BLOCK request for /?query=user'--comment [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:45110
+2025/04/18 10:23:56.269825 AuthCheck: Checking request for /index.html [GET] From: [::1]:45132
+2025/04/18 10:23:56.269879 AuthCheck: ALLOW request for /index.html From: [::1]:45132
+2025/04/18 10:23:56.270086 AuthCheck: Checking request for /malicious.php [GET] From: [::1]:45132
+2025/04/18 10:23:56.270462 AuthCheck: BLOCK request for /malicious.php [Blocked path suffix: .php] From: [::1]:45132
+2025/04/18 10:23:56.270925 AuthCheck: Checking request for /configuration.php [GET] From: [::1]:45134
+2025/04/18 10:23:56.270962 AuthCheck: BLOCK request for /configuration.php [Blocked path containing: configuration.php] From: [::1]:45134
+2025/04/18 10:23:56.271354 AuthCheck: Checking request for /?query=cat%20/etc/passwd [GET] From: [::1]:45148
+2025/04/18 10:23:56.271439 AuthCheck: BLOCK request for /?query=cat%20/etc/passwd [Blocked suspicious raw query substring: etc/passwd] From: [::1]:45148
+2025/04/18 10:23:56.271994 AuthCheck: Checking request for /wp-admin/index.php [GET] From: [::1]:45156
+2025/04/18 10:23:56.272109 AuthCheck: BLOCK request for /wp-admin/index.php [Blocked path containing: wp-admin/] From: [::1]:45156
+2025/04/18 10:23:56.272748 AuthCheck: Checking request for /app/config.json [GET] From: [::1]:45160
+2025/04/18 10:23:56.272788 AuthCheck: BLOCK request for /app/config.json [Blocked path containing: config.json] From: [::1]:45160
+2025/04/18 10:23:56.273269 AuthCheck: Checking request for /?query=<script>document.cookie [GET] From: [::1]:45172
+2025/04/18 10:23:56.273343 AuthCheck: BLOCK request for /?query=<script>document.cookie [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:45172
+2025/04/18 10:23:56.273763 AuthCheck: Checking request for /?query=test${execute} [GET] From: [::1]:45178
+2025/04/18 10:23:56.273845 AuthCheck: BLOCK request for /?query=test${execute} [Blocked suspicious decoded query regex: \${] From: [::1]:45178
+2025/04/18 10:23:56.274502 AuthCheck: Checking request for /?query=phpinfo() [GET] From: [::1]:45180
+2025/04/18 10:23:56.274595 AuthCheck: BLOCK request for /?query=phpinfo() [Blocked suspicious raw query substring: ()] From: [::1]:45180
+2025/04/18 10:23:56.275478 AuthCheck: Checking request for /index.jsp [GET] From: [::1]:45198
+2025/04/18 10:23:56.275541 AuthCheck: BLOCK request for /index.jsp [Blocked path suffix: .jsp] From: [::1]:45198
+2025/04/18 10:23:56.275994 AuthCheck: Checking request for /remote/access [GET] From: [::1]:45200
+2025/04/18 10:23:56.276020 AuthCheck: BLOCK request for /remote/access [Blocked path containing: remote/] From: [::1]:45200
+2025/04/18 10:23:56.276345 AuthCheck: Checking request for /?query=%24%7B%7Bsystem%7D%7D [GET] From: [::1]:45204
+2025/04/18 10:23:56.276417 AuthCheck: BLOCK request for /?query=%24%7B%7Bsystem%7D%7D [Blocked suspicious raw query substring: %24%7B] From: [::1]:45204
+2025/04/18 10:23:56.277905 AuthCheck: Checking request for /config.aspx [GET] From: [::1]:45232
+2025/04/18 10:23:56.277951 AuthCheck: BLOCK request for /config.aspx [Blocked path suffix: .aspx] From: [::1]:45232
+2025/04/18 10:23:56.278412 AuthCheck: Checking request for /wp-includes/script.js [GET] From: [::1]:45242
+2025/04/18 10:23:56.278479 AuthCheck: BLOCK request for /wp-includes/script.js [Blocked path containing: wp-includes/] From: [::1]:45242
+2025/04/18 10:23:56.278927 AuthCheck: Checking request for /xmlrpc.php [GET] From: [::1]:45248
+2025/04/18 10:23:56.278974 AuthCheck: BLOCK request for /xmlrpc.php [Blocked path suffix: .php] From: [::1]:45248
+2025/04/18 10:23:56.279649 AuthCheck: Checking request for /config.json [GET] From: [::1]:45262
+2025/04/18 10:23:56.279745 AuthCheck: BLOCK request for /config.json [Blocked path containing: config.json] From: [::1]:45262
+2025/04/18 10:23:56.280249 AuthCheck: Checking request for /repository/.git/config [GET] From: [::1]:45278
+2025/04/18 10:23:56.280294 AuthCheck: BLOCK request for /repository/.git/config [Blocked path containing: .git/] From: [::1]:45278
+2025/04/18 10:23:56.280732 AuthCheck: Checking request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [GET] From: [::1]:45286
+2025/04/18 10:23:56.280785 AuthCheck: BLOCK request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [Blocked suspicious raw query substring: %3Cscript] From: [::1]:45286
+2025/04/18 10:23:56.281287 AuthCheck: Checking request for /?query=../../../etc/passwd [GET] From: [::1]:45300
+2025/04/18 10:23:56.281402 AuthCheck: BLOCK request for /?query=../../../etc/passwd [Blocked suspicious raw query substring: ../] From: [::1]:45300
+2025/04/18 10:23:56.283703 AuthCheck: Checking request for /?query=<script>alert('XSS')</script> [GET] From: [::1]:45322
+2025/04/18 10:23:56.283766 AuthCheck: BLOCK request for /?query=<script>alert('XSS')</script> [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:45322
+2025/04/18 10:23:56.285791 AuthCheck: Checking request for /repo/.git/ [GET] From: [::1]:45378
+2025/04/18 10:23:56.285928 AuthCheck: BLOCK request for /repo/.git/ [Blocked path containing: .git/] From: [::1]:45378
+2025/04/18 10:23:56.286415 AuthCheck: Checking request for /.env [GET] From: [::1]:45380
+2025/04/18 10:23:56.286463 AuthCheck: BLOCK request for /.env [Blocked path suffix: .env] From: [::1]:45380
+2025/04/18 10:23:56.287555 AuthCheck: Checking request for /?query=normal_parameter [GET] From: [::1]:45402
+2025/04/18 10:23:56.287600 AuthCheck: ALLOW request for /?query=normal_parameter From: [::1]:45402
+2025/04/18 10:23:56.288338 AuthCheck: Checking request for /themes/wp-includes/style.css [GET] From: [::1]:45404
+2025/04/18 10:23:56.288402 AuthCheck: BLOCK request for /themes/wp-includes/style.css [Blocked path containing: wp-includes/] From: [::1]:45404
+2025/04/18 10:23:56.289108 AuthCheck: Checking request for /?query=%27%20OR%201=1 [GET] From: [::1]:45418
+2025/04/18 10:23:56.289165 AuthCheck: BLOCK request for /?query=%27%20OR%201=1 [Blocked suspicious raw query substring: %27%20OR%20] From: [::1]:45418
+2025/04/18 10:23:56.289546 AuthCheck: Checking request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [GET] From: [::1]:45434
+2025/04/18 10:23:56.289592 AuthCheck: BLOCK request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [Blocked suspicious raw query substring: eval(] From: [::1]:45434
+2025/04/18 10:23:56.290489 AuthCheck: Checking request for /?query=base64_decode('PHN5c3RlbT4=') [GET] From: [::1]:45438
+2025/04/18 10:23:56.290552 AuthCheck: BLOCK request for /?query=base64_decode('PHN5c3RlbT4=') [Blocked suspicious raw query substring: base64_decode] From: [::1]:45438
+2025/04/18 10:23:56.291155 AuthCheck: Checking request for / [GET] From: [::1]:45450
+2025/04/18 10:23:56.291211 AuthCheck: ALLOW request for / From: [::1]:45450
+2025/04/18 10:23:56.291387 AuthCheck: Checking request for /api/data [GET] From: [::1]:45450
+2025/04/18 10:23:56.291420 AuthCheck: ALLOW request for /api/data From: [::1]:45450
+2025/04/18 10:23:56.291572 AuthCheck: Checking request for /console/admin/settings [GET] From: [::1]:45450
+2025/04/18 10:23:56.291595 AuthCheck: BLOCK request for /console/admin/settings [Blocked path containing: admin/] From: [::1]:45450
+2025/04/18 10:23:56.291992 AuthCheck: Checking request for /?query=UNION%20SELECT%20password%20FROM%20users [GET] From: [::1]:45464
+2025/04/18 10:23:56.292040 AuthCheck: BLOCK request for /?query=UNION%20SELECT%20password%20FROM%20users [Blocked suspicious raw query substring: UNION%20SELECT] From: [::1]:45464
+2025/04/18 10:28:13.509555 AuthCheck: Checking request for /.htpasswd [GET] From: [::1]:57342
+2025/04/18 10:28:13.509629 AuthCheck: BLOCK request for /.htpasswd [Blocked path suffix: .htpasswd] From: [::1]:57342
+2025/04/18 10:28:13.510370 AuthCheck: Checking request for /repo/.git/ [GET] From: [::1]:57352
+2025/04/18 10:28:13.510416 AuthCheck: BLOCK request for /repo/.git/ [Blocked path containing: .git/] From: [::1]:57352
+2025/04/18 10:28:13.510949 AuthCheck: Checking request for /dashboard/manager/users [GET] From: [::1]:57364
+2025/04/18 10:28:13.511077 AuthCheck: BLOCK request for /dashboard/manager/users [Blocked path containing: manager/] From: [::1]:57364
+2025/04/18 10:28:13.511658 AuthCheck: Checking request for /?query=cat%20/etc/passwd [GET] From: [::1]:57376
+2025/04/18 10:28:13.511887 AuthCheck: BLOCK request for /?query=cat%20/etc/passwd [Blocked suspicious raw query substring: etc/passwd] From: [::1]:57376
+2025/04/18 10:28:13.513126 AuthCheck: Checking request for /themes/wp-includes/style.css [GET] From: [::1]:57410
+2025/04/18 10:28:13.513183 AuthCheck: BLOCK request for /themes/wp-includes/style.css [Blocked path containing: wp-includes/] From: [::1]:57410
+2025/04/18 10:28:13.513669 AuthCheck: Checking request for /console/admin/settings [GET] From: [::1]:57414
+2025/04/18 10:28:13.513716 AuthCheck: BLOCK request for /console/admin/settings [Blocked path containing: admin/] From: [::1]:57414
+2025/04/18 10:28:13.514571 AuthCheck: Checking request for /system/configuration.php [GET] From: [::1]:57426
+2025/04/18 10:28:13.514611 AuthCheck: BLOCK request for /system/configuration.php [Blocked path containing: configuration.php] From: [::1]:57426
+2025/04/18 10:28:13.515400 AuthCheck: Checking request for /remote/access [GET] From: [::1]:57440
+2025/04/18 10:28:13.515437 AuthCheck: BLOCK request for /remote/access [Blocked path containing: remote/] From: [::1]:57440
+2025/04/18 10:28:13.516297 AuthCheck: Checking request for /malicious.php [GET] From: [::1]:57462
+2025/04/18 10:28:13.516348 AuthCheck: BLOCK request for /malicious.php [Blocked path suffix: .php] From: [::1]:57462
+2025/04/18 10:28:13.516885 AuthCheck: Checking request for /.env [GET] From: [::1]:57468
+2025/04/18 10:28:13.516930 AuthCheck: BLOCK request for /.env [Blocked path suffix: .env] From: [::1]:57468
+2025/04/18 10:28:13.517368 AuthCheck: Checking request for /?query=%27%20OR%201=1 [GET] From: [::1]:57470
+2025/04/18 10:28:13.517461 AuthCheck: BLOCK request for /?query=%27%20OR%201=1 [Blocked suspicious raw query substring: %27%20OR%20] From: [::1]:57470
+2025/04/18 10:28:13.517934 AuthCheck: Checking request for / [GET] From: [::1]:57486
+2025/04/18 10:28:13.517995 AuthCheck: ALLOW request for / From: [::1]:57486
+2025/04/18 10:28:13.518201 AuthCheck: Checking request for /configuration.php [GET] From: [::1]:57486
+2025/04/18 10:28:13.518234 AuthCheck: BLOCK request for /configuration.php [Blocked path containing: configuration.php] From: [::1]:57486
+2025/04/18 10:28:13.518689 AuthCheck: Checking request for /api/remote/data [GET] From: [::1]:57502
+2025/04/18 10:28:13.518740 AuthCheck: BLOCK request for /api/remote/data [Blocked path containing: remote/] From: [::1]:57502
+2025/04/18 10:28:13.519277 AuthCheck: Checking request for /?query=base64_decode('PHN5c3RlbT4=') [GET] From: [::1]:57506
+2025/04/18 10:28:13.519342 AuthCheck: BLOCK request for /?query=base64_decode('PHN5c3RlbT4=') [Blocked suspicious raw query substring: base64_decode] From: [::1]:57506
+2025/04/18 10:28:13.519699 AuthCheck: Checking request for /?query=<script>document.cookie [GET] From: [::1]:57510
+2025/04/18 10:28:13.519791 AuthCheck: BLOCK request for /?query=<script>document.cookie [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:57510
+2025/04/18 10:28:13.521909 AuthCheck: Checking request for /config.json [GET] From: [::1]:57526
+2025/04/18 10:28:13.521966 AuthCheck: BLOCK request for /config.json [Blocked path containing: config.json] From: [::1]:57526
+2025/04/18 10:28:13.522455 AuthCheck: Checking request for /?query=%24%7B%7Bsystem%7D%7D [GET] From: [::1]:57534
+2025/04/18 10:28:13.522516 AuthCheck: BLOCK request for /?query=%24%7B%7Bsystem%7D%7D [Blocked suspicious raw query substring: %24%7B] From: [::1]:57534
+2025/04/18 10:28:13.522988 AuthCheck: Checking request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [GET] From: [::1]:57544
+2025/04/18 10:28:13.523038 AuthCheck: BLOCK request for /?query=%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd [Blocked suspicious raw query substring: %2E%2E%2F] From: [::1]:57544
+2025/04/18 10:28:13.523972 AuthCheck: Checking request for /?query=javascript:alert(1) [GET] From: [::1]:57554
+2025/04/18 10:28:13.524034 AuthCheck: BLOCK request for /?query=javascript:alert(1) [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:57554
+2025/04/18 10:28:13.524440 AuthCheck: Checking request for /?query=<script>alert('XSS')</script> [GET] From: [::1]:57556
+2025/04/18 10:28:13.524530 AuthCheck: BLOCK request for /?query=<script>alert('XSS')</script> [Blocked suspicious decoded query regex: (?i)(<script|onerror=|onload=|javascript:|alert\()] From: [::1]:57556
+2025/04/18 10:28:13.525339 AuthCheck: Checking request for /?query=../../../etc/passwd [GET] From: [::1]:57572
+2025/04/18 10:28:13.525436 AuthCheck: BLOCK request for /?query=../../../etc/passwd [Blocked suspicious raw query substring: ../] From: [::1]:57572
+2025/04/18 10:28:13.528235 AuthCheck: Checking request for /wp-admin/index.php [GET] From: [::1]:57618
+2025/04/18 10:28:13.528298 AuthCheck: BLOCK request for /wp-admin/index.php [Blocked path containing: wp-admin/] From: [::1]:57618
+2025/04/18 10:28:13.528789 AuthCheck: Checking request for /wp-includes/script.js [GET] From: [::1]:57624
+2025/04/18 10:28:13.528848 AuthCheck: BLOCK request for /wp-includes/script.js [Blocked path containing: wp-includes/] From: [::1]:57624
+2025/04/18 10:28:13.529375 AuthCheck: Checking request for /admin/dashboard [GET] From: [::1]:57632
+2025/04/18 10:28:13.529432 AuthCheck: BLOCK request for /admin/dashboard [Blocked path containing: admin/] From: [::1]:57632
+2025/04/18 10:28:13.529808 AuthCheck: Checking request for /xmlrpc.php [GET] From: [::1]:57644
+2025/04/18 10:28:13.529853 AuthCheck: BLOCK request for /xmlrpc.php [Blocked path suffix: .php] From: [::1]:57644
+2025/04/18 10:28:13.530659 AuthCheck: Checking request for /manager/login [GET] From: [::1]:57662
+2025/04/18 10:28:13.530720 AuthCheck: BLOCK request for /manager/login [Blocked path containing: manager/] From: [::1]:57662
+2025/04/18 10:28:13.531301 AuthCheck: Checking request for /app/config.json [GET] From: [::1]:57678
+2025/04/18 10:28:13.531368 AuthCheck: BLOCK request for /app/config.json [Blocked path containing: config.json] From: [::1]:57678
+2025/04/18 10:28:13.531860 AuthCheck: Checking request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [GET] From: [::1]:57682
+2025/04/18 10:28:13.531938 AuthCheck: BLOCK request for /?query=%3Cscript%3Ealert(1)%3C/script%3E [Blocked suspicious raw query substring: %3Cscript] From: [::1]:57682
+2025/04/18 10:28:13.532475 AuthCheck: Checking request for /?query=user' [GET] From: [::1]:57690
+2025/04/18 10:28:13.532563 AuthCheck: ALLOW request for /?query=user' From: [::1]:57690
+2025/04/18 10:28:13.533042 AuthCheck: Checking request for /?query=test${execute} [GET] From: [::1]:57692
+2025/04/18 10:28:13.533128 AuthCheck: BLOCK request for /?query=test${execute} [Blocked suspicious decoded query regex: \${] From: [::1]:57692
+2025/04/18 10:28:13.533670 AuthCheck: Checking request for /.htaccess [GET] From: [::1]:57700
+2025/04/18 10:28:13.533723 AuthCheck: BLOCK request for /.htaccess [Blocked path suffix: .htaccess] From: [::1]:57700
+2025/04/18 10:28:13.534289 AuthCheck: Checking request for /?query=phpinfo() [GET] From: [::1]:57712
+2025/04/18 10:28:13.534353 AuthCheck: BLOCK request for /?query=phpinfo() [Blocked suspicious raw query substring: ()] From: [::1]:57712
+2025/04/18 10:28:13.535626 AuthCheck: Checking request for /images/logo.png [GET] From: [::1]:57740
+2025/04/18 10:28:13.535677 AuthCheck: ALLOW request for /images/logo.png From: [::1]:57740
+2025/04/18 10:28:13.536307 AuthCheck: Checking request for /config.aspx [GET] From: [::1]:57744
+2025/04/18 10:28:13.536361 AuthCheck: BLOCK request for /config.aspx [Blocked path suffix: .aspx] From: [::1]:57744
+2025/04/18 10:28:13.536827 AuthCheck: Checking request for /repository/.git/config [GET] From: [::1]:57754
+2025/04/18 10:28:13.536868 AuthCheck: BLOCK request for /repository/.git/config [Blocked path containing: .git/] From: [::1]:57754
+2025/04/18 10:28:13.537433 AuthCheck: Checking request for /?query=UNION%20SELECT%20password%20FROM%20users [GET] From: [::1]:57768
+2025/04/18 10:28:13.537492 AuthCheck: BLOCK request for /?query=UNION%20SELECT%20password%20FROM%20users [Blocked suspicious raw query substring: UNION%20SELECT] From: [::1]:57768
+2025/04/18 10:28:13.537894 AuthCheck: Checking request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [GET] From: [::1]:57776
+2025/04/18 10:28:13.537977 AuthCheck: BLOCK request for /?query=eval(base64_decode('PHN5c3RlbT4=')) [Blocked suspicious raw query substring: eval(] From: [::1]:57776
+2025/04/18 10:28:13.538905 AuthCheck: Checking request for /?query=user'--comment [GET] From: [::1]:57792
+2025/04/18 10:28:13.538975 AuthCheck: BLOCK request for /?query=user'--comment [Blocked suspicious decoded query regex: (?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)] From: [::1]:57792
+2025/04/18 10:28:13.539572 AuthCheck: Checking request for /index.html [GET] From: [::1]:57796
+2025/04/18 10:28:13.539626 AuthCheck: ALLOW request for /index.html From: [::1]:57796
+2025/04/18 10:28:13.539837 AuthCheck: Checking request for /index.jsp [GET] From: [::1]:57796
+2025/04/18 10:28:13.539901 AuthCheck: BLOCK request for /index.jsp [Blocked path suffix: .jsp] From: [::1]:57796
+2025/04/18 10:28:13.540911 AuthCheck: Checking request for /api/data [GET] From: [::1]:57806
+2025/04/18 10:28:13.540985 AuthCheck: ALLOW request for /api/data From: [::1]:57806
+2025/04/18 10:28:13.541170 AuthCheck: Checking request for /?query=normal_parameter [GET] From: [::1]:57806
+2025/04/18 10:28:13.541237 AuthCheck: ALLOW request for /?query=normal_parameter From: [::1]:57806
+2025/04/18 10:28:13.541390 AuthCheck: Checking request for /plugins/wp-admin/edit.php [GET] From: [::1]:57806
+2025/04/18 10:28:13.541419 AuthCheck: BLOCK request for /plugins/wp-admin/edit.php [Blocked path containing: wp-admin/] From: [::1]:57806

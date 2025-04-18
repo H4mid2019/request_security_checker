@@ -115,6 +115,22 @@ func TestAuthCheckHandler(t *testing.T) {
 		{"Blocked XSS Script Decoded", "GET", "/profile?bio=%3Cscript%3Ealert(1)%3C/script%3E", http.StatusForbidden},
 		{"Blocked SQLi Comment Decoded", "GET", "/product?id=1%20--%20comment", http.StatusForbidden},
 		{"Blocked EL Injection Decoded", "GET", "/api?action=$%7B1+1%7D", http.StatusForbidden},
+
+		{"Blocked ", "GET", "/query=echo 'evil' | grep e", http.StatusForbidden},
+		{"Blocked Path Traversal", "GET", "/?query=user' UNION SELECT password FROM users", http.StatusForbidden},
+		{"Blocked Path Traversal Encoded", "GET", "/?query=user' SELECT * FROM users", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded", "GET", "/?query=user' OR 1=1", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 2", "GET", "/?query=user' OR '1'='1", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 3", "GET", "/?query=user' OR 1=1 #", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 4", "GET", "/?query=user' DELETE FROM users", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 5", "GET", "/?query=<img onerror=alert(1)>", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 6", "GET", "/?query=SELECT * FROM users WHERE username='admin' AND password='password'", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 7", "GET", "/?query=SELECT * FROM users WHERE username='admin' AND password='password' OR 1=1", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 8", "GET", "/?query=user' INSERT INTO users VALUES (1,'hack')", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 9", "GET", "/?query=user' UPDATE users SET admin=1", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 10", "GET", "/?query=user' AND '1'='1", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 11", "GET", "/?query=DROP TABLE users", http.StatusForbidden},
+		{"Blocked Path Traversal Decoded 12", "GET", "/?query=user'#comment", http.StatusForbidden},
 	}
 
 	for _, tt := range testCases {
