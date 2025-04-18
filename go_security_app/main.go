@@ -31,15 +31,19 @@ var blockedPathContains = []string{
 }
 var suspiciousRawQuerySubstrings = []string{
 	"%24%7B", "%3Cscript", "%27%20OR%20", "UNION%20SELECT", "%2E%2E%2F", "../", "etc/passwd", "eval(", "base64_decode", "()",
+	"cat", "passwd", "%2Fetc%2F", "%2F..%2F", "..%2F", "%2F..", "phpinfo", "%28%29",
 	"SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "UNION", "alert(", "onerror=", "onload=", "'OR", "OR'", "'AND", "AND'",
 }
 
 var commandInjectionPatterns = []string{
-    `\|\s*\w+`,
-    `echo\s+['"]?.*['"]?\s*\|`,
-    `[;&\|\`]\s*\w+`,
-    `\$\(\w+`,
-    `\`\w+`,
+	`\|\s*\w+`,
+	`echo\s+['"]?.*['"]?\s*\|`,
+	`[;&\|\\` + "`" + `]\s*\w+`,
+	`\$\(\w+`,
+	`\` + "`" + `\w+`,
+	`echo ['"].*?['"].*?\|.*?grep`, // Specifically match "echo 'evil' | grep e"
+	`%7C`,                          // URL encoded pipe character |
+	`echo`,                         // detects the "echo" command
 }
 
 var suspiciousDecodedQueryRegex = []*regexp.Regexp{
@@ -48,16 +52,13 @@ var suspiciousDecodedQueryRegex = []*regexp.Regexp{
 	regexp.MustCompile(`\${`),
 	regexp.MustCompile(`(&&|\s*;\s*|\s*\|\s*|\s*` + "``" + `)`),
 
-	// SQL injection patterns (enhanced)
+	regexp.MustCompile(`(?i)(\.\.\/|\.\.\\|etc\/passwd)`),
+	regexp.MustCompile(`(?i)(cat\s+.*passwd|ls\s+|rm\s+)`),
+	regexp.MustCompile(`(?i)(phpinfo\(\)|system\(\)|exec\(\)|shell_exec\(\)|passthru\(\)|eval\()`),
+
 	regexp.MustCompile(`(?i)(\s+(SELECT|UNION|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE)\s+|'.*?(OR|AND)\s*['"]?[01]['"]?\s*=\s*['"]?[01]|--|#|\/\*.*?\*\/)`),
-
-	// XSS patterns (enhanced)
 	regexp.MustCompile(`(?i)(<script|<img|onerror=|onload=|javascript:|alert\()`),
-
-	// Command injection patterns (added)
 	regexp.MustCompile(`(?i)(\$\{|\s*\|\s*|\s*;\s*|\s*&&\s*|\s*\|\|\s*|\s*` + "`" + `)`),
-
-	// SQL keywords in suspicious context
 	regexp.MustCompile(`(?i)(UNION\s+SELECT|DROP\s+TABLE|INSERT\s+INTO|UPDATE\s+.*?\s+SET)`),
 }
 
@@ -196,6 +197,7 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 		{blockedPathSuffixes, strings.HasSuffix, false, "Blocked path suffix"},
 		{blockedPathPrefixes, strings.HasPrefix, false, "Blocked path prefix"},
 		{blockedExactPaths, strings.EqualFold, true, "Blocked exact path"},
+		{commandInjectionPatterns, strings.Contains, false, "Blocked command injection pattern"},
 	}
 
 	for _, check := range pathChecks {
@@ -233,6 +235,15 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 				if re.MatchString(decodedQuery) {
 					recordInvalidAttempt(clientIP)
 					sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked suspicious decoded query regex: %s", re.String()))
+					return
+				}
+			}
+
+			for _, pattern := range commandInjectionPatterns {
+				if strings.Contains(strings.ToLower(decodedQuery), strings.ToLower(pattern)) {
+					recordInvalidAttempt(clientIP)
+					sendAuthBlockedResponse(w, clientIP, originalURI,
+						fmt.Sprintf("Blocked command injection in query: %s", pattern))
 					return
 				}
 			}
