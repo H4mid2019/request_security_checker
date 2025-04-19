@@ -134,7 +134,6 @@ func main() {
 			fmt.Printf("✅ PASS: Got expected status %d\n", resp.StatusCode)
 			passed++
 		} else {
-			fmt.Printf("Testing [%s]: %s\n", tc.description, testURL)
 			fmt.Printf("❌ FAIL: Expected status %d, got %d\n", tc.expected, resp.StatusCode)
 			failed++
 		}
