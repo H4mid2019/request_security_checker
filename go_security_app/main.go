@@ -20,46 +20,42 @@ import (
 var blockedPathSuffixes = []string{
 	".php", ".aspx", ".jsp", ".htaccess", ".htpasswd", ".git/", ".env",
 }
-var blockedPathPrefixes = []string{
-	"/wp-admin/", "/wp-includes/", "/admin/", "/remote/", "/manager/",
-}
-var blockedExactPaths = []string{
-	"/xmlrpc.php", "/config.json", "/configuration.php",
-}
 var blockedPathContains = []string{
-	".git/", "wp-includes/", "wp-admin/", "admin/", "remote/", "manager/", "config.json", "configuration.php",
-}
-var suspiciousRawQuerySubstrings = []string{
-	"%24%7B", "%3Cscript", "%27%20OR%20", "UNION%20SELECT", "%2E%2E%2F", "../", "etc/passwd", "eval(", "base64_decode", "()",
-	"cat", "passwd", "%2Fetc%2F", "%2F..%2F", "..%2F", "%2F..", "phpinfo", "%28%29",
-	"SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "UNION", "alert(", "onerror=", "onload=", "'OR", "OR'", "'AND", "AND'",
+	".git/", "wp-includes/", "wp-admin/", "admin/", "remote/", "manager/",
+	"xmlrpc.php", "config.json", "configuration.php",
 }
 
-var commandInjectionPatterns = []string{
-	`\|\s*\w+`,
-	`echo\s+['"]?.*['"]?\s*\|`,
-	`[;&\|\\` + "`" + `]\s*\w+`,
-	`\$\(\w+`,
-	`\` + "`" + `\w+`,
-	`echo ['"].*?['"].*?\|.*?grep`, // Specifically match "echo 'evil' | grep e"
-	`%7C`,                          // URL encoded pipe character |
-	`echo`,                         // detects the "echo" command
+// Encoded markers matched against the raw query before decoding, used as a
+// fallback when the query has malformed encoding. Plain keywords are left to
+// suspiciousDecodedQueryRegex so values like ?category= are not blocked.
+var suspiciousRawQuerySubstrings = []string{
+	"%24%7b", // ${
+	"%3cscript",
+	"%2e%2e%2f",
+	"..%2f",
+	"%2f..",
+	"../",
+	"%2fetc%2f",
+	"etc/passwd",
 }
+
+// Checked against both the decoded path and query.
+var commandInjectionRegex = regexp.MustCompile(
+	"(?i)(&&|\\|\\||;\\s*\\w|\\s\\|\\s|`|\\$\\(|\\bcat\\s+/|\\beval\\(|base64_decode|phpinfo\\(\\)|system\\(\\)|exec\\(\\)|shell_exec\\(\\)|passthru\\()")
 
 var suspiciousDecodedQueryRegex = []*regexp.Regexp{
-	regexp.MustCompile(`(?i)(\s(SELECT|UNION|INSERT|UPDATE|DELETE)\s|\s(OR|AND)\s*['"]?1['"]?\s*=\s*['"]?1|--|#|\/\*.*\*\/)`),
-	regexp.MustCompile(`(?i)(<script|onerror=|onload=|javascript:|alert\()`),
-	regexp.MustCompile(`\${`),
-	regexp.MustCompile(`(&&|\s*;\s*|\s*\|\s*|\s*` + "``" + `)`),
-
-	regexp.MustCompile(`(?i)(\.\.\/|\.\.\\|etc\/passwd)`),
-	regexp.MustCompile(`(?i)(cat\s+.*passwd|ls\s+|rm\s+)`),
-	regexp.MustCompile(`(?i)(phpinfo\(\)|system\(\)|exec\(\)|shell_exec\(\)|passthru\(\)|eval\()`),
-
-	regexp.MustCompile(`(?i)(\s+(SELECT|UNION|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE)\s+|'.*?(OR|AND)\s*['"]?[01]['"]?\s*=\s*['"]?[01]|--|#|\/\*.*?\*\/)`),
-	regexp.MustCompile(`(?i)(<script|<img|onerror=|onload=|javascript:|alert\()`),
-	regexp.MustCompile(`(?i)(\$\{|\s*\|\s*|\s*;\s*|\s*&&\s*|\s*\|\|\s*|\s*` + "`" + `)`),
-	regexp.MustCompile(`(?i)(UNION\s+SELECT|DROP\s+TABLE|INSERT\s+INTO|UPDATE\s+.*?\s+SET)`),
+	regexp.MustCompile(`(?i)\bunion\b\s+\bselect\b`),
+	regexp.MustCompile(`(?i)\bselect\b\s+.*\bfrom\b`),
+	regexp.MustCompile(`(?i)\binsert\b\s+\binto\b`),
+	regexp.MustCompile(`(?i)\bupdate\b\s+.+\bset\b`),
+	regexp.MustCompile(`(?i)\bdelete\b\s+\bfrom\b`),
+	regexp.MustCompile(`(?i)\bdrop\b\s+\b(table|database)\b`),
+	regexp.MustCompile(`(?i)\b(or|and)\b\s+['"]?\d+['"]?\s*=\s*['"]?\d+`),
+	regexp.MustCompile(`(?i)['"]\s*\b(or|and)\b\s+['"\d]`),
+	regexp.MustCompile(`(--|#|/\*.*?\*/)`),
+	regexp.MustCompile(`(?i)(<script|<img|<svg|onerror\s*=|onload\s*=|javascript:|alert\s*\()`),
+	regexp.MustCompile(`\$\{`),
+	regexp.MustCompile(`(?i)(\.\./|\.\.\\|etc/passwd)`),
 }
 
 var redisClient *redis.Client
@@ -186,31 +182,19 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 
 	lowerPath := strings.ToLower(path)
 	type pathCheck struct {
-		patterns    []string
-		checkFn     func(path, pattern string) bool
-		isEqualFold bool
-		message     string
+		patterns []string
+		checkFn  func(path, pattern string) bool
+		message  string
 	}
 
 	pathChecks := []pathCheck{
-		{blockedPathContains, strings.Contains, false, "Blocked path containing"},
-		{blockedPathSuffixes, strings.HasSuffix, false, "Blocked path suffix"},
-		{blockedPathPrefixes, strings.HasPrefix, false, "Blocked path prefix"},
-		{blockedExactPaths, strings.EqualFold, true, "Blocked exact path"},
-		{commandInjectionPatterns, strings.Contains, false, "Blocked command injection pattern"},
+		{blockedPathContains, strings.Contains, "Blocked path containing"},
+		{blockedPathSuffixes, strings.HasSuffix, "Blocked path suffix"},
 	}
 
 	for _, check := range pathChecks {
 		for _, pattern := range check.patterns {
-			patternLower := strings.ToLower(pattern)
-			var match bool
-			if check.isEqualFold {
-				match = check.checkFn(path, pattern)
-			} else {
-				match = check.checkFn(lowerPath, patternLower)
-			}
-
-			if match {
+			if check.checkFn(lowerPath, pattern) {
 				recordInvalidAttempt(clientIP)
 				sendAuthBlockedResponse(w, clientIP, originalURI,
 					fmt.Sprintf("%s: %s", check.message, pattern))
@@ -219,10 +203,16 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if commandInjectionRegex.MatchString(path) {
+		recordInvalidAttempt(clientIP)
+		sendAuthBlockedResponse(w, clientIP, originalURI, "Blocked command injection in path")
+		return
+	}
+
 	if rawQuery != "" {
 		lowerRawQuery := strings.ToLower(rawQuery)
 		for _, pattern := range suspiciousRawQuerySubstrings {
-			if strings.Contains(lowerRawQuery, strings.ToLower(pattern)) {
+			if strings.Contains(lowerRawQuery, pattern) {
 				recordInvalidAttempt(clientIP)
 				sendAuthBlockedResponse(w, clientIP, originalURI, fmt.Sprintf("Blocked suspicious raw query substring: %s", pattern))
 				return
@@ -239,13 +229,10 @@ func authCheckHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			for _, pattern := range commandInjectionPatterns {
-				if strings.Contains(strings.ToLower(decodedQuery), strings.ToLower(pattern)) {
-					recordInvalidAttempt(clientIP)
-					sendAuthBlockedResponse(w, clientIP, originalURI,
-						fmt.Sprintf("Blocked command injection in query: %s", pattern))
-					return
-				}
+			if commandInjectionRegex.MatchString(decodedQuery) {
+				recordInvalidAttempt(clientIP)
+				sendAuthBlockedResponse(w, clientIP, originalURI, "Blocked command injection in query")
+				return
 			}
 		} else {
 			log.Printf("AuthCheck: Warning: Query decode failed for '%s' from %s: %v", rawQuery, clientIP, err)

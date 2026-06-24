@@ -100,6 +100,15 @@ func TestAuthCheckHandler(t *testing.T) {
 		{"Allowed Path GET with Query", "GET", "/some/valid/path?user=1", http.StatusOK},
 		{"Allowed Path POST", "POST", "/api/submit", http.StatusOK},
 
+		// Legitimate traffic that must not be blocked.
+		{"Allowed category query", "GET", "/products?category=books", http.StatusOK},
+		{"Allowed selected query", "GET", "/list?selected=1&sort=updated", http.StatusOK},
+		{"Allowed word echo in path", "GET", "/blog/echolocation-in-bats", http.StatusOK},
+		{"Allowed empty parens", "GET", "/calc?formula=sum()", http.StatusOK},
+		{"Allowed concatenate param", "GET", "/api?op=concatenate&drop=false", http.StatusOK},
+		{"Allowed dropdown param", "GET", "/ui?dropdown=open", http.StatusOK},
+		{"Allowed cat substring", "GET", "/vacation-rentals?location=france", http.StatusOK},
+
 		// Blocked Paths
 		{"Blocked PHP Suffix", "GET", "/index.php", http.StatusForbidden},
 		{"Blocked WP-Admin Prefix", "GET", "/wp-admin/options.php", http.StatusForbidden},
