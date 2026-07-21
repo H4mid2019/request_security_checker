@@ -1,83 +1,53 @@
-# Request Security Checker
+# request_security_checker
 
 [![Test and Build](https://github.com/H4mid2019/request_security_checker/actions/workflows/test_builder.yml/badge.svg)](https://github.com/H4mid2019/request_security_checker/actions/workflows/test_builder.yml)
 
-## Overview
+A small Go service that sits in front of an application and rejects obviously
+malicious requests before they reach it. It plugs into Nginx as an
+`auth_request` backend, so Nginx asks it about each request and drops the ones
+it refuses.
 
-Request Security Checker is a high-performance security middleware designed to protect web applications
-from malicious requests. Built in Go, it acts as a protective shield in front of your main application,
-particularly beneficial for Python applications that may struggle with handling high request volumes.
+The reason it exists: a Python application server has a limited number of
+workers, and scanner traffic asking for `/wp-login.php` or
+`/index.php?id=1' OR '1'='1` ties them up. Answering those in Go, in front of
+the application, keeps them off the workers.
 
-## Why Use This?
+## What this demonstrates
 
-- **Reduce Load on Main Application**: Filters out malicious requests before they reach your main app
-- **Protect Against Common Attacks**: Blocks SQL injection, XSS, path traversal, and other attack patterns
-- **Rate Limiting**: Automatically blocks IPs that send suspicious requests
-- **High Performance**: Written in Go for excellent throughput (handles thousands of requests per second)
-- **Easy Integration**: Works with Nginx and other reverse proxies
+- **Nginx `auth_request` integration.** The service answers 200 or 403 for a
+  subrequest carrying the original URI, method and client IP. A sample
+  [nginx.conf](nginx.conf) is in the repo.
+- **Pattern matching on paths and query strings.** Requests for common
+  vulnerable paths (PHP endpoints, admin panels, backup files) and query strings
+  carrying SQL injection or XSS payloads are rejected.
+- **Rate limiting with a cooldown, backed by Redis.** An IP that trips the
+  filter repeatedly gets blocked for `COOLDOWN_MINUTES`. Keeping the counters in
+  Redis rather than in process memory means several instances share one view of
+  who is blocked, and a restart does not clear the blocklist.
+- **Two modes.** It works as an Nginx auth backend or as a standalone
+  pass-through checker.
 
-## Features
-
-- **Path Security**: Blocks suspicious paths (PHP files, admin pages, etc.)
-- **Query Parameter Analysis**: Detects SQL injection and XSS attempts
-- **Rate Limiting**: Blocks repeat offenders with configurable cooldown periods
-- **Redis Integration**: Distributed rate limiting for multi-instance deployments
-
-## Requirements
-
-- Go 1.24+ (for building)
-- Docker 28.0+ and Docker Compose v2.35.0+ (for containerized deployment)
-- Redis (optional, for distributed rate limiting)
-
-## Quick Start
-
-### Using Docker Compose
+## Run it
 
 ```bash
-# Clone the repository
-git clone https://github.com/H4mid2019/request_security_checker.git
-cd request_security_checker
-
-# Start the service
-docker-compose up -d
+docker compose up -d
 ```
 
-### Using Pre-built Binaries
-
-Download the latest binary for your platform from the [Releases](https://github.com/H4mid2019/request_security_checker/releases) page.
+Or take a binary from the
+[releases](https://github.com/H4mid2019/request_security_checker/releases) page:
 
 ```bash
-# Download (replace with your architecture)
 wget https://github.com/H4mid2019/request_security_checker/releases/latest/download/request_security_checker-linux-amd64
-
-# Make executable
 chmod +x request_security_checker-linux-amd64
-
-# Run
 ./request_security_checker-linux-amd64
 ```
 
-## Configuration
-
-Configuration is done via environment variables:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `5000` | Port to listen on |
-| `REDIS_ADDR` | `localhost:6379` | Redis server address |
-| `REDIS_PASSWORD` | `` | Redis password |
-| `REDIS_DB` | `0` | Redis database |
-| `COOLDOWN_MINUTES` | `15` | Duration to block IPs after violation |
-| `LOG_FILE` | `blocker.log` | Log file location |
-
-## Integration with Nginx
+## Nginx wiring
 
 ```nginx
 location / {
     auth_request /auth;
     auth_request_set $auth_status $upstream_status;
-    
-    # Your main app
     proxy_pass http://your_main_app;
 }
 
@@ -92,26 +62,44 @@ location = /auth {
 }
 ```
 
-A sample Nginx config is in repo. [nginx.conf](nginx.conf)
+Redis is optional. Without it the service still filters requests; it just loses
+the shared rate limiting.
 
-## Building from Source
+## Configuration
+
+| Variable           | Default          | Description |
+| ------------------ | ---------------- | ----------- |
+| `PORT`             | `5000`           | Listen port |
+| `REDIS_ADDR`       | `localhost:6379` | Redis address |
+| `REDIS_PASSWORD`   | empty            | |
+| `REDIS_DB`         | `0`              | |
+| `COOLDOWN_MINUTES` | `15`             | How long a tripped IP stays blocked |
+| `LOG_FILE`         | `blocker.log`    | |
+
+## Requirements
+
+Go 1.24+ to build. Docker 28.0+ and Compose v2.35.0+ for the container setup.
+
+## Tests
 
 ```bash
-# Clone the repository
-git clone https://github.com/H4mid2019/request_security_checker.git
-cd request_security_checker/go_security_app
-
-# Build
-go build -o request_security_checker
-
-# Run
-./request_security_checker
+cd go_security_app && go test -race ./...
 ```
+
+Covered today: the standalone handler, the `auth_request` handler, and rate
+limiting across expiry, blocking, and multiple clients independently.
+
+Not covered yet:
+
+1. **The detection rules themselves.** They are exercised indirectly through the
+   handlers, but there is no table-driven test listing payloads that must be
+   blocked alongside benign requests that must not be. That second half matters
+   more: a filter that blocks a legitimate query string is a worse outage than
+   the scanner it was meant to stop.
+2. **Throughput.** There is no benchmark in the repo, so this README does not
+   quote a requests-per-second figure. `go test -bench` over the check function
+   would give a real one.
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) for details.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+MIT
